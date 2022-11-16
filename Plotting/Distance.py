@@ -20,10 +20,15 @@ def draw_distance_vs_time(df,dcut,path):
         distancia_der = list(particle_data["Dist_derecha"])
         time=list(particle_data["Time"])
         fig=plt.figure()
-        if len(distancia_izq) > 0:
-            plt.plot(time,-1*distancia_izq, ".-r",label="Left cell: "+str(list(particle_data["Vecino_izq"])[0]))
-        if len(distancia_der) > 0:
-            plt.plot(time, distancia_der, ".-g",label="Right cell: "+str(list(particle_data["Vecino_der"])[0]))
+        
+        id_vec = list(set(particle_data.loc[particle_data["Vecino_izq"].notnull(),"Vecino_izq"]))
+        if id_vec:
+            plt.plot(time,-1*distancia_izq, ".-r",label="Left cell: "+str(int(id_vec[0])) )
+        
+        
+        id_vec = list(set(particle_data.loc[particle_data["Vecino_der"].notnull(),"Vecino_der"]))
+        if id_vec:
+            plt.plot(time, distancia_der, ".-g",label="Right cell: "+str(int(id_vec[0])))
         plt.plot((time),[0]*len(time), ":k", label=None) #r"$Cell:$")
         
         plt.xlabel("Time (min)",fontsize=17)

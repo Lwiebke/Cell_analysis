@@ -10,7 +10,7 @@ Created on Mon Feb 28 11:46:36 2022
 
 #import sys
 
-def velocidad_instantanea_1D(df,experimento):
+def velocidad_instantanea_1D(df):
     
     df["Velocidad"]=[0]*df.shape[0]
     for part_id, particula in df.groupby("ID"):

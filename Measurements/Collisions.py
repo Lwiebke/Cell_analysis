@@ -156,7 +156,7 @@ def calculate_col_time(df,d_cut):
                  duraciones_colision.append(duracion)                 
                  # if (any(part["Collision_solved"])): # y tiene fin de colision
                       
-    return(duraciones_colision)
+    return(df, duraciones_colision)
 
 
 

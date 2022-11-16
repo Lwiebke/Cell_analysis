@@ -23,6 +23,12 @@ class Experiment:
             self.name = (info[0].split(":")[1])[:-1]
             self.file = (info[1].split(":")[1])[:-1]
             self.metadata = (info[2].split(":")[1])[:-1]
+            
             self.n_canales = int(info[3].split(":")[1])
             self.pendiente = float(info[4].split(":")[1])
+            
+            # self.blobs_dir = (info[5].split(":")[1])[:-1]
+            # self.blob_file = (info[6].split(":")[1])[:-1]
+            
+            
         

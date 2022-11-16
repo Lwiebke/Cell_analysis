@@ -26,9 +26,9 @@ def definir_trenes(df, d_cut):
 
             for j in range(len(x)-1):
                 dist =  x[j+1] - x[j]  
-
-                if dist < d_cut:
-            		grp.loc[grp["ID"]==IDs[j+1],"Tren_ID"]=str(grp.loc[grp["ID"]==IDs[j],"Tren_ID"].item())
+                if (dist < d_cut):
+                    
+                    grp.loc[grp["ID"]==IDs[j+1],"Tren_ID"] = str(grp.loc[grp["ID"]==IDs[j],"Tren_ID"].item())
 
             
             df.loc[(df["Canal"] == i[0]) & (df["Time"] == i[1]),"Tren_ID"] = grp["Tren_ID"]

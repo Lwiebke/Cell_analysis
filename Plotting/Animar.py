@@ -24,43 +24,30 @@ def animar_1D(df):
         # initialize an empty list of cirlces
         return []
     
-    def animate(i,df):
-        
-        patches = []
-        # ax.patches = []
-        for p in ax.patches:
-            p.remove()
-        
-    #    time = i * 0.05
-    #    time = round(time,2)
+    def animate1d(i,df):
         df = df[df["Frame"]==i]
-        for ID, part in df.groupby("ID"):
-            patches.append(ax.add_patch( plt.Circle((part["Position X"],2 * part["radio"] * part["Canal"]),part["radio"],fill=False) ))
-        
-        return patches
+        scatter.set_data(df["Position X"],df["Canal"]) 
+        return scatter,
     
-      
-    if not("radio" in df.columns): 
-        df["radio"] = 5
-    
-    fig = plt.figure()
-    #plt.axis([min(df["Position X"])-50,max(df["Position X"])+50,-12 , 2*max(df["Canal"])*12])
-    ax = plt.gca()
-    ax.set_aspect(1)
+    fig, ax = plt.subplots()
+    scatter, =  ax.plot([],[],".")
     df["Time"] = [round(t,2) for t in df["Time"]]
-       
-    plt.axis([min(df["Position X"])-50,max(df["Position X"])+50,-2*max(df["radio"]) , 2*max(df["Canal"])*max(df["radio"])])
     
-    radio = df["radio"][0]
+    radio = 1
     for i in range(max(df["Canal"])+1):
-       plt.plot([min(df["Position X"]), max(df["Position X"])] , [2*i*radio -radio, 2*i*radio - radio] , "k:")
-       plt.xlim([min(df["Position X"])-50,max(df["Position X"])+50])
-       plt.ylim([-radio , 2*max((df["Canal"]+1)*radio)])
-       plt.xlabel(r"Pos X ($\mu$m)")
+        plt.plot([min(df["Position X"]), max(df["Position X"])] , [i-0.5, i-0.5] , "k-",lw=0.5)
+        plt.xlim([min(df["Position X"])-50,max(df["Position X"])+50])
+        plt.ylim([-radio , max((df["Canal"]+1)*radio)])
+        plt.xlabel(r"Pos X ($\mu$m)")
+        plt.ylabel(r"Channel")
     
     n_frames = max(list(df["Frame"]))
-    anim = animation.FuncAnimation(fig, animate, init_func=init,fargs=[df], frames = range(1,n_frames,1),blit=True)
+    anim = animation.FuncAnimation(fig, animate1d, init_func=init,fargs=[df], frames = range(1,n_frames,1),blit=True)
+
     return (anim)
+
+
+
 
 
 def animar_2D(df):
@@ -71,8 +58,13 @@ def animar_2D(df):
         return []
     
     def animate(i,df):
-        for p in ax.patches:
-            p.remove()
+        
+        # l = ax.patches
+        while ax.patches:
+            ax.patches[0].remove()
+            # print(len(ax.patches))
+        # for p in ax.patches:
+            # p.
         
         patches = []
         df = df[df["Frame"]==i]

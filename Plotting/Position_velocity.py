@@ -13,10 +13,10 @@ from scipy import signal
 
 
 
-def plot_pos_n_vel(df, path):
+def plot_pos_n_vel(df, path, show_colision=False):
     
     for j, part in df.groupby("ID"):
-        if any(part["Colision"]):    
+        # if any(part["Colision"]):    
             fig, axs = plt.subplots(2)       
             part.plot(ax=axs[0],x="Time", y='Position X', label=j)
             part.plot(ax=axs[1],x="Time", y='Velocidad', legend=None)
@@ -28,15 +28,14 @@ def plot_pos_n_vel(df, path):
             axs[0].set_ylabel(r"Position X: $\mu$m")
             axs[1].set_ylabel(r"Velocity X  ($\mu$m/min)")
             
-    #        axs[1].plot(part[part["Inversion"]]["Time"],part[part["Inversion"]]["Velocidad"],"r*")
-    #        axs[0].plot(part[part["Inversion"]]["Time"],part[part["Inversion"]]["Position X"],"r*")
-            
-            axs[1].plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Velocidad"],"rX")
-            axs[0].plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Position X"],"rX")
-            axs[0].plot(part[part["Collision_solved"]]["Time"],part[part["Collision_solved"]]["Position X"],"gx")
-            
+            if show_colision:          
+                axs[1].plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Velocidad"],"rX")
+                axs[1].plot(part[part["Collision_solved"]]["Time"],part[part["Collision_solved"]]["Velocidad"],"gx")
+                axs[0].plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Position X"],"rX")
+                axs[0].plot(part[part["Collision_solved"]]["Time"],part[part["Collision_solved"]]["Position X"],"gx")
+                
             axs[1].plot([min(list(part["Time"])),max(list(part["Time"]))],[0,0],"r:")
-            axs[1].plot(part[part["Collision_solved"]]["Time"],part[part["Collision_solved"]]["Velocidad"],"gx")
+            
             fig.tight_layout()
             
             fig.savefig(path+"cell_"+str(j)+".png",dpi=300, bbox_inches="tight")
@@ -44,49 +43,49 @@ def plot_pos_n_vel(df, path):
             
 
 
-def autocorr(x,lags):
-    '''fft, pad 0s, non partial'''
+# def autocorr(x,lags):
+#     '''fft, pad 0s, non partial'''
 
-    n=len(x)
-    # pad 0s to 2n-1
-    ext_size=2*n-1
-    # nearest power of 2
-    fsize=2**np.ceil(np.log2(ext_size)).astype('int')
+#     n=len(x)
+#     # pad 0s to 2n-1
+#     ext_size=2*n-1
+#     # nearest power of 2
+#     fsize=2**np.ceil(np.log2(ext_size)).astype('int')
 
-    xp=x-np.mean(x)
-    var=np.var(x)
+#     xp=x-np.mean(x)
+#     var=np.var(x)
 
-    # do fft and ifft
-    cf=np.fft.fft(xp,fsize)
-    sf=cf.conjugate()*cf
-    corr=np.fft.ifft(sf).real
-    corr=corr/var/n
+#     # do fft and ifft
+#     cf=np.fft.fft(xp,fsize)
+#     sf=cf.conjugate()*cf
+#     corr=np.fft.ifft(sf).real
+#     corr=corr/var/n
 
-    return corr[:len(lags)]
+#     return corr[:len(lags)]
 
 
-def plot_vel_autocorrelation(df,path):
-        for j, part in df.groupby("ID"):
-            fig, axs = plt.subplots(2)    
-            print(j)
-            df=df.sort_values("Time")
-            vels = part["Velocidad"]
-            vels = np.asarray(vels)
+# def plot_vel_autocorrelation(df,path):
+#         for j, part in df.groupby("ID"):
+#             fig, axs = plt.subplots(2)    
+#             print(j)
+#             df=df.sort_values("Time")
+#             vels = part["Velocidad"]
+#             vels = np.asarray(vels)
             
-            lags = np.linspace(0,len(vels),1)
+#             lags = np.linspace(0,len(vels),1)
 
-            autoc = autocorr(vels, lags)
+#             autoc = autocorr(vels, lags)
                     
   
-            part.plot(ax=axs[1],x="Time", y='Velocidad', legend=None)
-            axs[1].set_ylabel(r"Velocidad X  ($\mu$m/min)")
+#             part.plot(ax=axs[1],x="Time", y='Velocidad', legend=None)
+#             axs[1].set_ylabel(r"Velocidad X  ($\mu$m/min)")
             
-            axs[0].plot(lags, autoc, ".")
-            axs[0].set_ylabel(r"Autocorrelacion")
+#             axs[0].plot(lags, autoc, ".")
+#             axs[0].set_ylabel(r"Autocorrelacion")
           
             
-            fig.savefig(path+"autocorr_"+str(j)+".png",dpi=200, bbox_inches="tight")
-            plt.close(fig)    
+#             fig.savefig(path+"autocorr_"+str(j)+".png",dpi=200, bbox_inches="tight")
+#             plt.close(fig)    
             
             
     
@@ -130,34 +129,34 @@ def plot_vel_autocorrelation(df,path):
 #
 #
 #
-def plot_vel_and_fourier(df, path):
+# def plot_vel_and_fourier(df, path):
     
-    for j, part in df.groupby("ID"):
-        fig, axs = plt.subplots(1)
-        df=df.sort_values("Time")
-        vels = abs(part["Velocidad"])
-        N = len(vels)
-        n=np.arange(N)
-        T = 1/20
+#     for j, part in df.groupby("ID"):
+#         fig, axs = plt.subplots(1)
+#         df=df.sort_values("Time")
+#         vels = abs(part["Velocidad"])
+#         N = len(vels)
+#         n=np.arange(N)
+#         T = 1/20
         
-        freq = n/T
-        cut_off = 10
-        transform = np.fft.fft(vels)
-#        filtered = transform
-#        filtered[np.abs(freq) < cut_off] = 0
-        
-        
-#        filtered = ifft(filtered)
-#        part.plot(ax=axs[0],x="Time", y='Velocidad', legend=None)
-        axs.plot(freq, transform)
+#         freq = n/T
+#         cut_off = 10
+#         transform = np.fft.fft(vels)
+# #        filtered = transform
+# #        filtered[np.abs(freq) < cut_off] = 0
         
         
-        axs.set_xlabel(r"Frecuencia de velocidad $seg⁻¹ $)",fontsize=16)
+# #        filtered = ifft(filtered)
+# #        part.plot(ax=axs[0],x="Time", y='Velocidad', legend=None)
+#         axs.plot(freq, transform)
+        
+        
+#         axs.set_xlabel(r"Frecuencia de velocidad $seg⁻¹ $)",fontsize=16)
      
         
 
-        fig.savefig(path+"Vel_and_freq_"+str(j)+".png",dpi=200, bbox_inches="tight")
-        plt.close(fig)    
+#         fig.savefig(path+"Vel_and_freq_"+str(j)+".png",dpi=200, bbox_inches="tight")
+#         plt.close(fig)    
         
 
 
@@ -165,45 +164,45 @@ def plot_vel_and_fourier(df, path):
 
 
 
-def plot_pos_n_vel_show_inversion(df, path):
+# def plot_pos_n_vel_show_inversion(df, path):
     
-    for j, part in df.groupby("ID"):
-#        if any(part["Inversion"]):    
-            fig, axs = plt.subplots()       
-#            part.plot(ax=axs[0],x="Time", y='Position X',marker=".", label=j)
-            part.plot(ax=axs,x="Time", y='Velocidad',marker=".", legend=None)
-#            axs.plot(part[part["Inversion"]]["Time"],part[part["Inversion"]]["Velocidad"],"r*")
-            axs.set_xlabel("Tiempo (min)",fontsize=14)
-#            axs[0].plot(part[part["Inversion"]]["Time"],part[part["Inversion"]]["Position X"],"r*")
-#            axs[0].set_ylabel(r"Posicion X: $\mu$m")
-            axs.set_ylabel(r"Velocidad ($\mu$m/min)",fontsize=14)
-            axs.plot([min(list(part["Time"])),max(list(part["Time"]))],[0,0],"r:")
-            axs.grid()
-            fig.savefig(path+"Flip_media_in_cell_"+str(j)+".png",dpi=200, bbox_inches="tight")
-            plt.close(fig)    
+#     for j, part in df.groupby("ID"):
+# #        if any(part["Inversion"]):    
+#             fig, axs = plt.subplots()       
+# #            part.plot(ax=axs[0],x="Time", y='Position X',marker=".", label=j)
+#             part.plot(ax=axs,x="Time", y='Velocidad',marker=".", legend=None)
+# #            axs.plot(part[part["Inversion"]]["Time"],part[part["Inversion"]]["Velocidad"],"r*")
+#             axs.set_xlabel("Tiempo (min)",fontsize=14)
+# #            axs[0].plot(part[part["Inversion"]]["Time"],part[part["Inversion"]]["Position X"],"r*")
+# #            axs[0].set_ylabel(r"Posicion X: $\mu$m")
+#             axs.set_ylabel(r"Velocidad ($\mu$m/min)",fontsize=14)
+#             axs.plot([min(list(part["Time"])),max(list(part["Time"]))],[0,0],"r:")
+#             axs.grid()
+#             fig.savefig(path+"Flip_media_in_cell_"+str(j)+".png",dpi=200, bbox_inches="tight")
+#             plt.close(fig)    
             
 
 
-def plot_pos_n_vel_show_colision(df, path):
+# def plot_pos_n_vel_show_colision(df, path):
     
     
     
-    for canal, df_canal in df.groupby("Canal"):
-        fig, axs = plt.subplots(2)
-        for j, part in df_canal.groupby("ID"):
-            if any(part["Colision"]):    
-                #fig, axs = plt.subplots(2)       
-                part.plot(ax=axs[0],x="Time", y='Position X',marker=".", label=j)
-                part.plot(ax=axs[1],x="Time", y='Velocidad',marker=".", legend=None)
-                axs[1].plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Velocidad"],"rX")
-                axs[0].plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Position X"],"rX")
-                axs[0].set_ylabel(r"Posicion X: $\mu$m")
-                axs[1].set_ylabel(r"Velocidad X  ($\mu$m/min)")
-                axs[1].plot([0,70],[0,0],"r:")
-                axs[1].plot(part[part["Collision_solved"]]["Time"],part[part["Collision_solved"]]["Position X"],"gx")
+#     for canal, df_canal in df.groupby("Canal"):
+#         fig, axs = plt.subplots(2)
+#         for j, part in df_canal.groupby("ID"):
+#             if any(part["Colision"]):    
+#                 #fig, axs = plt.subplots(2)       
+#                 part.plot(ax=axs[0],x="Time", y='Position X',marker=".", label=j)
+#                 part.plot(ax=axs[1],x="Time", y='Velocidad',marker=".", legend=None)
+#                 axs[1].plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Velocidad"],"rX")
+#                 axs[0].plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Position X"],"rX")
+#                 axs[0].set_ylabel(r"Posicion X: $\mu$m")
+#                 axs[1].set_ylabel(r"Velocidad X  ($\mu$m/min)")
+#                 axs[1].plot([0,70],[0,0],"r:")
+#                 axs[1].plot(part[part["Collision_solved"]]["Time"],part[part["Collision_solved"]]["Position X"],"gx")
                 
-        fig.savefig(path+"Colision_"+str(canal)+".png",dpi=200, bbox_inches="tight")
-        plt.close(fig)    
+#         fig.savefig(path+"Colision_"+str(canal)+".png",dpi=200, bbox_inches="tight")
+#         plt.close(fig)    
                 
 
 
@@ -212,29 +211,23 @@ def plot_pos_n_vel_show_colision(df, path):
 
 #from matplotlib.ticker import (AutoMinorLocator, MultipleLocator)
 
-def plot_pos_n_vel_by_channel(df, path):
-    
-    
+def plot_pos_by_channel(df, path,show_colision=False):
+        
     for canal, df_canal in df.groupby("Canal"):
         fig, axs = plt.subplots(1)
         for j, part in df_canal.groupby("ID"):
             
             part.plot(ax=axs,x="Time", y = 'Position X', lw = 0.5, label = j)
-#            part.plot(ax=axs[1],x="Time", y='Velocidad', lw=0.5,legend=None)
+
             
             axs.set_ylabel(r"Position X: $\mu$m")
             axs.set_xlabel(r"Time (min)")
             axs.grid()
-#            axs.xaxis.set_major_locator(MultipleLocator(10))
-#            axs.yaxis.set_major_locator(MultipleLocator(10))
-#            axs.xaxis.set_minor_locator(AutoMinorLocator(2))
-#            axs.yaxis.set_minor_locator(AutoMinorLocator(2))
-#            axs.grid()
-#            axs.set_ylabel(r"Velocidad ($\mu$m/min)")
-#            axs[1].plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Velocidad"],"rX")
-            axs.plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Position X"],"rx")
-            axs.plot(part[part["Collision_solved"]]["Time"],part[part["Collision_solved"]]["Position X"],"gx")
-            plt.legend("")
+         
+            if show_colision:
+                axs.plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Position X"],"rx")
+                axs.plot(part[part["Collision_solved"]]["Time"],part[part["Collision_solved"]]["Position X"],"gx")
+            # plt.legend()
         fig.savefig(path+"canal_"+str(canal)+".png",dpi=500, bbox_inches="tight")
         plt.close(fig)
         
