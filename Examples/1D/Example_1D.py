@@ -13,7 +13,7 @@ import numpy as np
 import sys
 
 """ Path to the Cell_analysis directory"""
-sys.path.append('/home/lucas/Escritorio/Analisis-datos/testeo/')
+sys.path.append('../')
 
 
 from Cell_analysis.Measurements.Collisions import * 

@@ -14,7 +14,8 @@ import sys
 
 
 
-sys.path.append('/home/lucas/Escritorio/Analisis-datos/testeo/')
+""" Path to the Cell_analysis directory"""
+sys.path.append('../')
 
 
 from Cell_analysis.Preprocessing.Formatter import get_calibrated
