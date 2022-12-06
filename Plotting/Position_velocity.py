@@ -217,7 +217,7 @@ def plot_pos_by_channel(df, path,show_colision=False):
         fig, axs = plt.subplots(1)
         for j, part in df_canal.groupby("ID"):
             
-            part.plot(ax=axs,x="Time", y = 'Position X', lw = 0.5, label = j)
+            part.plot(ax=axs,x="Time", y = 'Position X', lw = 0.5,label=j)
 
             
             axs.set_ylabel(r"Position X: $\mu$m")
@@ -227,7 +227,7 @@ def plot_pos_by_channel(df, path,show_colision=False):
             if show_colision:
                 axs.plot(part[part["Colision"]]["Time"],part[part["Colision"]]["Position X"],"rx")
                 axs.plot(part[part["Collision_solved"]]["Time"],part[part["Collision_solved"]]["Position X"],"gx")
-            # plt.legend()
+            plt.legend([],[])
         fig.savefig(path+"canal_"+str(canal)+".png",dpi=500, bbox_inches="tight")
         plt.close(fig)
         

@@ -61,6 +61,29 @@ def asignar_canales_dbscan(df,eps,min_samples):
         
     return df
   
+    
+def asignar_canales_kmeans(df,k):
+    from sklearn.cluster import KMeans
+    
+    sub_df=df.loc[:,["Position X","Position Y"]]
+    kmeans = KMeans(n_clusters=k).fit(sub_df)
+        
+    df.loc[:,"Canal"]=kmeans.labels_
+    
+    return df
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
       
 def plot_channels(df):
     from random import randint

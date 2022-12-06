@@ -123,7 +123,7 @@ def velocidad_2d(df):
         #     d = [0]*len(tiempos)
     
         df.loc[df["ID"] == part_id,"Velocidad"] = v
-        df.loc[df["ID"] == part_id,"Dir_vel"] = d
+        df.loc[df["ID"] == part_id,"Dir_vel"] = direc
         
 
     return(df)

@@ -121,8 +121,8 @@ def find_collision_end(df,dt):
                     else:
                         aux=0
                     if (aux == n_steps_3_mins):
-                        #fin = i - int(n_steps_3_mins)
-                        fin = i - int(n_steps_3_mins/2)
+                        fin = i - int(n_steps_3_mins)
+                        # fin = i - int(n_steps_3_mins/2)
                         break
                     
                 
