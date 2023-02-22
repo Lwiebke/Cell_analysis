@@ -24,10 +24,10 @@ razonable. """
 
 
     medio = max(df["Position X"])-min(df["Position X"])/2.0
-    df['Position Y'] = df['Position Y'] + pendiente*(df["Position X"]-medio)
+    df['Position Y aux'] = df['Position Y'] + pendiente*(df["Position X"]-medio)
 
-    breaks = jenkspy.jenks_breaks(df['Position Y'], n_classes=num_canales)
-    df['Canal'] = pd.cut(df['Position Y'],
+    breaks = jenkspy.jenks_breaks(df['Position Y aux'], n_classes=num_canales)
+    df['Canal'] = pd.cut(df['Position Y aux'],
                         bins=breaks,
                         labels=range(num_canales),
                         include_lowest=True)

@@ -13,7 +13,7 @@ import numpy as np
 import sys
 
 """ Path to the Cell_analysis directory"""
-sys.path.append('../')
+sys.path.append('../../../')
 
 
 from Cell_analysis.Measurements.Collisions import * 
@@ -27,7 +27,7 @@ from Cell_analysis.Plotting.Position_velocity import *
 
 all_data = {}
 
-nombre = "6um-rep1_procesado.csv"
+nombre = "6um_procesado.csv"
 experimento = "6um-20s"
 
 df = pd.read_csv(nombre)
@@ -37,15 +37,15 @@ d_cut = 30
 
 
 " Here we serach colisions and calculate the time they take to get solved"
-# df, t_col = calculate_col_time(df,d_cut) 
+df, t_col = calculate_col_time(df,d_cut) 
 
 
 
 """ Fast visualization to see every trayectory and velocity. Option to show automatic collisons found.
 
 plot_pos_by channel is specially usefull to check for missasigned colisions"""
-# plot_pos_n_vel(df,path_result,show_colision=True)
-# plot_pos_by_channel(df,path_result,show_colision=True)
+plot_pos_n_vel(df,path_result,show_colision=True)
+plot_pos_by_channel(df,path_result,show_colision=True)
 
 
 """ Animation can be made with 2 options, Y position or just by channel """
@@ -53,8 +53,8 @@ plot_pos_by channel is specially usefull to check for missasigned colisions"""
 # anim_1d = animar_1D(df)
 # anim_1d.save("anim1d.gif",dpi=300)
 
-anim_2d = animar_2D(df)
-anim_2d.save("anim2d.gif",dpi=300)
+# anim_2d = animar_2D(df)
+# anim_2d.save("anim2d.gif",dpi=300)
 
 
 """ Diagrama Fundamental """
